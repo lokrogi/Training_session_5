@@ -8,6 +8,8 @@ public class CurrencyExchangeApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CurrencyExchangeApiApplication.class, args);
+
+		//test comment
 	}
 
 }
