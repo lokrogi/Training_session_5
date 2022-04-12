@@ -1,6 +1,7 @@
 package com.sda.currencyexchangeapi.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,14 +15,15 @@ import java.sql.Date;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Currency {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String baseCurrency;
-    private String wantedCurrency;
-    private double value;
+    private String base;
+    private String target;
+    private double rate;
     private Date date;
 
 }
