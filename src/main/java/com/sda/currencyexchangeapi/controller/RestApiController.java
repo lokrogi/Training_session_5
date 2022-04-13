@@ -1,9 +1,11 @@
 package com.sda.currencyexchangeapi.controller;
 
 import com.sda.currencyexchangeapi.domain.CurrencyService;
+
 import com.sda.currencyexchangeapi.model.Currency;
 import com.sda.currencyexchangeapi.model.CurrencyDto;
 import org.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

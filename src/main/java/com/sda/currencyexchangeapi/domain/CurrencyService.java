@@ -1,7 +1,12 @@
 package com.sda.currencyexchangeapi.domain;
 
+
 import com.sda.currencyexchangeapi.model.Currency;
 import com.sda.currencyexchangeapi.model.CurrencyDto;
+
+import com.sda.currencyexchangeapi.domain.ExchangeRateApiConnection;
+import com.sda.currencyexchangeapi.model.Currency;
+
 import com.sda.currencyexchangeapi.repository.CurrencyRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +19,7 @@ import java.time.LocalDate;
 
 @Service
 public class CurrencyService {
+
 
     private final CurrencyRepository currencyRepository;
     private final ExchangeRateApiConnection exchangeRateApi;
@@ -50,6 +56,7 @@ public class CurrencyService {
         } catch (URISyntaxException | InterruptedException | IOException e) {
             return null;
         }
+
     }
 
 }
