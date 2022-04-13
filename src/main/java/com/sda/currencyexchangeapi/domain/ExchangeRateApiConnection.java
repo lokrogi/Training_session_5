@@ -2,7 +2,10 @@ package com.sda.currencyexchangeapi.domain;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
+
+
 import org.springframework.web.util.UriBuilder;
+
 
 import java.io.IOException;
 import java.net.*;
@@ -13,11 +16,12 @@ import java.net.http.HttpResponse;
 @Component
 public class ExchangeRateApiConnection {
 
-    private static final String stringUrl = "https://api.exchangerate.host/latest";
+    private static final String stringUrl = "https://api.exchangerate.host/";
 
-    public JSONObject getLatestCurrencyExchange(String base, String target) throws IOException, URISyntaxException, InterruptedException {
+    public JSONObject getCurrencyExchange(String base, String target, String date) throws URISyntaxException, IOException, InterruptedException {
 
-        String strUrlWithParams = stringUrl + "?base=" + base + "&symbols=" + target;
+        String strUrlWithParams = stringUrl + date + "?base=" + base + "&symbols=" + target;
+
 
 
         HttpRequest request = HttpRequest.newBuilder()
