@@ -53,6 +53,7 @@ public class ExchangeRateApiConnection {
             return currency;
         } catch (URISyntaxException | InterruptedException | IOException e) {
             return null;
+
         }
     }
 }
