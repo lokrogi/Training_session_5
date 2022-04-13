@@ -8,6 +8,8 @@ import com.sda.currencyexchangeapi.domain.ExchangeRateApiConnection;
 import com.sda.currencyexchangeapi.model.Currency;
 
 import com.sda.currencyexchangeapi.repository.CurrencyRepository;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ public class CurrencyService {
     private final ExchangeRateApiConnection exchangeRateApi;
     private final CurrencyMapper currencyMapper;
 
+    private final Logger logger = LogManager.getLogger(CurrencyService.class);
+
     @Autowired
     public CurrencyService(CurrencyRepository currencyRepository, ExchangeRateApiConnection exchangeRateApi, CurrencyMapper currencyMapper) {
         this.currencyRepository = currencyRepository;
@@ -38,24 +42,21 @@ public class CurrencyService {
                 .findByBaseAndTargetAndDate(base, target, Date.valueOf(date));
 
         if (requestedCurrency != null) {
+            logger.info("Currency loaded from data base.");
             return currencyMapper.map(requestedCurrency);
         }
 
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = exchangeRateApi.getCurrencyExchange(base, target, date);
+        Currency currencyFromExchangeApi = exchangeRateApi.getCurrency(base, target, date);
 
-            Currency currency = Currency.builder()
-                    .base(base)
-                    .target(target)
-                    .rate(jsonObject.getJSONObject("rates").getDouble(target))
-                    .date(Date.valueOf(jsonObject.getString("date")))
-                    .build();
-
-            return currencyMapper.map(currencyRepository.save(currency));
-        } catch (URISyntaxException | InterruptedException | IOException e) {
-            return null;
+        if(currencyFromExchangeApi != null) {
+            logger.info("Currency loaded from external api.");
+            return currencyMapper.map(currencyRepository.save(currencyFromExchangeApi));
         }
+
+        return null;
+
+
+
 
     }
 
