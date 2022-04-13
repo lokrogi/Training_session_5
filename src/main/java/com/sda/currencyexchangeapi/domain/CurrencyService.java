@@ -1,6 +1,6 @@
-package com.sda.currencyexchangeapi.service;
+package com.sda.currencyexchangeapi.domain;
 
-import com.sda.currencyexchangeapi.connection.ExchangeRateApiConnection;
+import com.sda.currencyexchangeapi.domain.ExchangeRateApiConnection;
 import com.sda.currencyexchangeapi.model.Currency;
 import com.sda.currencyexchangeapi.repository.CurrencyRepository;
 import org.json.JSONObject;

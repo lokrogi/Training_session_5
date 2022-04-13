@@ -1,4 +1,4 @@
-package com.sda.currencyexchangeapi.connection;
+package com.sda.currencyexchangeapi.domain;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
