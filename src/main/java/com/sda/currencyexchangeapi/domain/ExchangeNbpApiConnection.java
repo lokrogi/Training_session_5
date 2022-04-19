@@ -4,26 +4,22 @@ import com.sda.currencyexchangeapi.model.Currency;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
-
-import org.springframework.web.util.UriBuilder;
-
-
 import java.io.IOException;
-import java.net.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.Date;
 
 @Component
-public class ExchangeRateApiConnection {
+public class ExchangeNbpApiConnection {
 
-    private static final String stringUrl = "https://api.exchangerate.host/";
+    private static final String stringUrl = "http://api.nbp.pl/api/exchangerates/rates/c/";
 
-    private JSONObject getCurrencyExchangeJson(String base, String target, String date) throws URISyntaxException, IOException, InterruptedException {
+    public JSONObject getPlnCurrencyExchangeJson(String target, String date) throws URISyntaxException, IOException, InterruptedException {
 
-        String strUrlWithParams = stringUrl + date + "?base=" + base + "&symbols=" + target;
-
+        String strUrlWithParams = stringUrl + target + "/" + date + "/?format=json";
 
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -36,23 +32,26 @@ public class ExchangeRateApiConnection {
                 .send(request, HttpResponse.BodyHandlers.ofString());
 
         return new JSONObject(response.body());
-
     }
 
-    public Currency getCurrency(String base, String target, String date) {
+    public Currency getPlnCurrency(String base, String target, String date) {
         try {
-            JSONObject jsonObject = getCurrencyExchangeJson(base, target, date);
+            JSONObject jsonObject = getPlnCurrencyExchangeJson(target, date);
 
             Currency currency = Currency.builder()
                     .base(base)
                     .target(target)
-                    .rate(jsonObject.getJSONObject("rates").getDouble(target))
-                    .date(Date.valueOf(jsonObject.getString("date")))
+                    .rate(jsonObject.getJSONArray("rates").getJSONObject(0).getDouble("bid"))
+                    .date(Date.valueOf(jsonObject.getJSONArray("rates").getJSONObject(0).getString("effectiveDate")))
                     .build();
+
+            double temp = currency.getRate();
+            currency.setRate(1/temp);
 
             return currency;
         } catch (URISyntaxException | InterruptedException | IOException e) {
             return null;
         }
     }
+
 }

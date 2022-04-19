@@ -4,18 +4,13 @@ package com.sda.currencyexchangeapi.domain;
 import com.sda.currencyexchangeapi.model.Currency;
 import com.sda.currencyexchangeapi.model.CurrencyDto;
 
-import com.sda.currencyexchangeapi.domain.ExchangeRateApiConnection;
-import com.sda.currencyexchangeapi.model.Currency;
-
 import com.sda.currencyexchangeapi.repository.CurrencyRepository;
-import org.json.JSONObject;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.sql.Date;
-import java.time.LocalDate;
 
 @Service
 public class CurrencyService {
@@ -24,12 +19,16 @@ public class CurrencyService {
     private final CurrencyRepository currencyRepository;
     private final ExchangeRateApiConnection exchangeRateApi;
     private final CurrencyMapper currencyMapper;
+    private final ExchangeNbpApiConnection exchangeNbpApi;
+
+    private final Logger logger = LogManager.getLogger(CurrencyService.class);
 
     @Autowired
-    public CurrencyService(CurrencyRepository currencyRepository, ExchangeRateApiConnection exchangeRateApi, CurrencyMapper currencyMapper) {
+    public CurrencyService(CurrencyRepository currencyRepository, ExchangeRateApiConnection exchangeRateApi, CurrencyMapper currencyMapper, ExchangeNbpApiConnection exchangeNbpApi) {
         this.currencyRepository = currencyRepository;
         this.exchangeRateApi = exchangeRateApi;
         this.currencyMapper = currencyMapper;
+        this.exchangeNbpApi = exchangeNbpApi;
     }
 
 
@@ -38,25 +37,24 @@ public class CurrencyService {
                 .findByBaseAndTargetAndDate(base, target, Date.valueOf(date));
 
         if (requestedCurrency != null) {
+            logger.info("Currency loaded from data base.");
             return currencyMapper.map(requestedCurrency);
         }
 
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = exchangeRateApi.getCurrencyExchange(base, target, date);
+        Currency currencyFromExchangeApi;
 
-            Currency currency = Currency.builder()
-                    .base(base)
-                    .target(target)
-                    .rate(jsonObject.getJSONObject("rates").getDouble(target))
-                    .date(Date.valueOf(jsonObject.getString("date")))
-                    .build();
-
-            return currencyMapper.map(currencyRepository.save(currency));
-        } catch (URISyntaxException | InterruptedException | IOException e) {
-            return null;
+        if(base.equalsIgnoreCase("PLN")){
+            currencyFromExchangeApi = exchangeNbpApi.getPlnCurrency(base, target, date);
+        }else {
+            currencyFromExchangeApi = exchangeRateApi.getCurrency(base, target, date);
         }
 
+        if(currencyFromExchangeApi != null) {
+            logger.info("Currency loaded from external api.");
+            return currencyMapper.map(currencyRepository.save(currencyFromExchangeApi));
+        }
+
+        return null;
     }
 
 }
