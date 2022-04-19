@@ -1,6 +1,7 @@
 package com.sda.currencyexchangeapi.domain;
 
 import com.sda.currencyexchangeapi.model.Currency;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,6 @@ public class ExchangeNbpApiConnection {
     public JSONObject getPlnCurrencyExchangeJson(String target, String date) throws URISyntaxException, IOException, InterruptedException {
 
         String strUrlWithParams = stringUrl + target + "/" + date + "/?format=json";
-
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(new URI(strUrlWithParams))
@@ -49,9 +49,8 @@ public class ExchangeNbpApiConnection {
             currency.setRate(1/temp);
 
             return currency;
-        } catch (URISyntaxException | InterruptedException | IOException e) {
-            return null;
+        } catch (URISyntaxException | InterruptedException | IOException |JSONException e) {
+            throw new CurrencyException("Cannot get currency rate");
         }
     }
-
 }

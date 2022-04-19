@@ -1,6 +1,8 @@
 package com.sda.currencyexchangeapi.domain;
 
 import com.sda.currencyexchangeapi.model.Currency;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -15,28 +17,25 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.Date;
 
+@Slf4j
 @Component
 public class ExchangeRateApiConnection {
 
     private static final String stringUrl = "https://api.exchangerate.host/";
 
     private JSONObject getCurrencyExchangeJson(String base, String target, String date) throws URISyntaxException, IOException, InterruptedException {
-
         String strUrlWithParams = stringUrl + date + "?base=" + base + "&symbols=" + target;
 
-
-
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(strUrlWithParams))
-                .version(HttpClient.Version.HTTP_2)
-                .GET()
-                .build();
+                    .uri(new URI(strUrlWithParams))
+                    .version(HttpClient.Version.HTTP_2)
+                    .GET()
+                    .build();
 
         HttpResponse<String> response = HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofString());
+                    .send(request, HttpResponse.BodyHandlers.ofString());
 
         return new JSONObject(response.body());
-
     }
 
     public Currency getCurrency(String base, String target, String date) {
@@ -51,8 +50,8 @@ public class ExchangeRateApiConnection {
                     .build();
 
             return currency;
-        } catch (URISyntaxException | InterruptedException | IOException e) {
-            return null;
+        } catch (JSONException | URISyntaxException | InterruptedException | IOException e) {
+            throw new CurrencyException("Cannot get currency rate");
         }
     }
 }
