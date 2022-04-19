@@ -50,7 +50,7 @@ public class ExchangeNbpApiConnection {
 
             return currency;
         } catch (URISyntaxException | InterruptedException | IOException |JSONException e) {
-            throw new CurrencyException("Cannot get currency rate");
+            throw new CurrencyException("There is no such currency");
         }
     }
 }
