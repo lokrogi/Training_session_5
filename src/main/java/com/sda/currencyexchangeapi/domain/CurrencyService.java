@@ -43,7 +43,7 @@ public class CurrencyService {
 
         Currency currencyFromExchangeApi;
 
-        if(base.equalsIgnoreCase("PLN")){
+        if(base.equalsIgnoreCase("PLN") && !target.equals(base)){
             currencyFromExchangeApi = exchangeNbpApi.getPlnCurrency(base, target, date);
         }else {
             currencyFromExchangeApi = exchangeRateApi.getCurrency(base, target, date);

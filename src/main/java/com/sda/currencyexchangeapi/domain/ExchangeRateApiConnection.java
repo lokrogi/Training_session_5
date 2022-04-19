@@ -42,16 +42,19 @@ public class ExchangeRateApiConnection {
         try {
             JSONObject jsonObject = getCurrencyExchangeJson(base, target, date);
 
-            Currency currency = Currency.builder()
+            if(!base.equalsIgnoreCase(jsonObject.getString("base"))) {
+                throw new CurrencyException("There is no such currency");
+            }
+
+            return Currency.builder()
                     .base(base)
                     .target(target)
                     .rate(jsonObject.getJSONObject("rates").getDouble(target))
                     .date(Date.valueOf(jsonObject.getString("date")))
                     .build();
 
-            return currency;
         } catch (JSONException | URISyntaxException | InterruptedException | IOException e) {
-            throw new CurrencyException("Cannot get currency rate");
+            throw new CurrencyException("There is no such currency");
         }
     }
 }
