@@ -21,4 +21,8 @@ example response: `{"rate":4.2835}`
 
 * `GET` `/api/gold`
 
-with parameter `date`(date in format)
+with parameter `date`(date in format yyyy-mm-dd)
+
+example request: `/api/gold?date=2022-04-15`
+
+example response: `{"price":268.77}`
