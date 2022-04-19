@@ -2,17 +2,15 @@ package com.sda.currencyexchangeapi.controller;
 
 import com.sda.currencyexchangeapi.domain.CurrencyService;
 
-import com.sda.currencyexchangeapi.model.Currency;
+import com.sda.currencyexchangeapi.domain.GoldService;
 import com.sda.currencyexchangeapi.model.CurrencyDto;
-import org.json.JSONObject;
+import com.sda.currencyexchangeapi.model.GoldDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 
 
@@ -20,11 +18,13 @@ import java.time.LocalDate;
 public class RestApiController {
 
     private CurrencyService currencyService;
+    private GoldService goldService;
 
     @Autowired
-    public RestApiController(CurrencyService currencyService) {
+    public RestApiController(CurrencyService currencyService, GoldService goldService) {
 
         this.currencyService = currencyService;
+        this.goldService = goldService;
     }
 
     @GetMapping("api/latest")
@@ -42,6 +42,13 @@ public class RestApiController {
 
         return currencyService.getLatestCurrencyRate(base, target, date);
     }
+
+    @GetMapping("api/gold")
+    public GoldDto getGoldPrice(
+            @RequestParam(name = "date") String date) {
+        return goldService.getGoldPrice(date);
+    }
+
 
 }
 
