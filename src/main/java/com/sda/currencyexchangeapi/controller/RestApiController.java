@@ -28,7 +28,9 @@ public class RestApiController {
     }
 
     @GetMapping("api/latest")
-    public CurrencyDto getLatestCurrencyRate(@RequestParam(name = "base") String base, @RequestParam(name = "target") String target) {
+    public CurrencyDto getLatestCurrencyRate(
+            @RequestParam(name = "base") String base,
+            @RequestParam(name = "target") String target) {
 
         String date = String.valueOf(LocalDate.now());
         return currencyService.getLatestCurrencyRate(base, target, date);
@@ -46,9 +48,9 @@ public class RestApiController {
     @GetMapping("api/gold")
     public GoldDto getGoldPrice(
             @RequestParam(name = "date") String date) {
+
         return goldService.getGoldPrice(date);
     }
-
 
 }
 

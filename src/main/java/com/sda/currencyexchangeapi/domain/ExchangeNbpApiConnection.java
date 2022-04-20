@@ -1,6 +1,7 @@
 package com.sda.currencyexchangeapi.domain;
 
 import com.sda.currencyexchangeapi.model.Currency;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.Date;
 
+@Slf4j
 @Component
 public class ExchangeNbpApiConnection {
 
@@ -34,12 +36,12 @@ public class ExchangeNbpApiConnection {
         return new JSONObject(response.body());
     }
 
-    public Currency getPlnCurrency(String base, String target, String date) {
+    public Currency getPlnCurrency(String target, String date) {
         try {
             JSONObject jsonObject = getPlnCurrencyExchangeJson(target, date);
 
             Currency currency = Currency.builder()
-                    .base(base)
+                    .base("PLN")
                     .target(target)
                     .rate(jsonObject.getJSONArray("rates").getJSONObject(0).getDouble("bid"))
                     .date(Date.valueOf(jsonObject.getJSONArray("rates").getJSONObject(0).getString("effectiveDate")))

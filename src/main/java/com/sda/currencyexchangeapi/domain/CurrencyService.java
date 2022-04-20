@@ -5,6 +5,7 @@ import com.sda.currencyexchangeapi.model.Currency;
 import com.sda.currencyexchangeapi.model.CurrencyDto;
 
 import com.sda.currencyexchangeapi.repository.CurrencyRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 
+@Slf4j
 @Service
 public class CurrencyService {
 
@@ -21,7 +23,6 @@ public class CurrencyService {
     private final CurrencyMapper currencyMapper;
     private final ExchangeNbpApiConnection exchangeNbpApi;
 
-    private final Logger logger = LogManager.getLogger(CurrencyService.class);
 
     @Autowired
     public CurrencyService(CurrencyRepository currencyRepository, ExchangeRateApiConnection exchangeRateApi, CurrencyMapper currencyMapper, ExchangeNbpApiConnection exchangeNbpApi) {
@@ -37,20 +38,20 @@ public class CurrencyService {
                 .findByBaseAndTargetAndDate(base, target, Date.valueOf(date));
 
         if (requestedCurrency != null) {
-            logger.info("Currency loaded from data base.");
+            log.info("Currency loaded from data base.");
             return currencyMapper.map(requestedCurrency);
         }
 
         Currency currencyFromExchangeApi;
 
         if(base.equalsIgnoreCase("PLN") && !target.equals(base)){
-            currencyFromExchangeApi = exchangeNbpApi.getPlnCurrency(base, target, date);
+            currencyFromExchangeApi = exchangeNbpApi.getPlnCurrency(target, date);
         }else {
             currencyFromExchangeApi = exchangeRateApi.getCurrency(base, target, date);
         }
 
         if(currencyFromExchangeApi != null) {
-            logger.info("Currency loaded from external api.");
+            log.info("Currency loaded from external api.");
             return currencyMapper.map(currencyRepository.save(currencyFromExchangeApi));
         }
 
