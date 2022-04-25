@@ -40,7 +40,6 @@ public class GoldConnection {
 
             Gold gold = Gold.builder()
                     .date(Date.valueOf(date))
-                   // .price(jsonObject.getDouble("cena"))
                     .price(jsonArray.getJSONObject(0).getDouble("cena"))
                     .build();
 
