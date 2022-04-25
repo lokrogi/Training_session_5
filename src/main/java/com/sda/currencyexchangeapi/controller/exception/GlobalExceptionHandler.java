@@ -1,7 +1,7 @@
 package com.sda.currencyexchangeapi.controller.exception;
 
 import com.sda.currencyexchangeapi.domain.CurrencyException;
-import com.sda.currencyexchangeapi.domain.ExchangeRateApiConnection;
+import com.sda.currencyexchangeapi.domain.DateFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +15,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CurrencyException.class)
     public ErrorResponse handleCurrencyException(CurrencyException exception) {
         log.debug("Currency exception!");
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DateFormatException.class)
+    public ErrorResponse handleDateFormatException(DateFormatException exception) {
+        log.debug("DateFormat exception!");
         return new ErrorResponse(exception.getMessage());
     }
 }

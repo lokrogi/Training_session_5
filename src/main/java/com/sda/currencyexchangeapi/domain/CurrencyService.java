@@ -34,8 +34,15 @@ public class CurrencyService {
 
 
     public CurrencyDto getLatestCurrencyRate(String base, String target, String date) {
+        Date validDate;
+        try{
+            validDate = Date.valueOf(date);
+        }catch (IllegalArgumentException e) {
+            throw new DateFormatException("Invalid date format");
+        }
+
         Currency requestedCurrency = currencyRepository
-                .findByBaseAndTargetAndDate(base, target, Date.valueOf(date));
+                .findByBaseAndTargetAndDate(base, target, validDate);
 
         if (requestedCurrency != null) {
             log.info("Currency loaded from data base.");
