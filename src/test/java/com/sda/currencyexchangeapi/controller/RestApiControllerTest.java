@@ -68,7 +68,7 @@ class RestApiControllerTest {
 
     @Test
     void should_return_ok_response_for_historical_with_invalid_date_format_message() throws Exception {
-        mockMvc.perform(get("/api/historical?base=EURR&target=PLN&date=20192-03-14")
+        mockMvc.perform(get("/api/historical?base=EUR&target=PLN&date=20192-03-14")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())

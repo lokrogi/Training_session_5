@@ -53,16 +53,14 @@ public class CurrencyService {
 
         if(base.equalsIgnoreCase("PLN") && !target.equals(base)){
             currencyFromExchangeApi = exchangeNbpApi.getPlnCurrency(target, date);
+            log.info("Currency loaded from NBP api.");
         }else {
             currencyFromExchangeApi = exchangeRateApi.getCurrency(base, target, date);
+            log.info("Currency loaded from exchange rate api.");
         }
 
-        if(currencyFromExchangeApi != null) {
-            log.info("Currency loaded from external api.");
-            return currencyMapper.map(currencyRepository.save(currencyFromExchangeApi));
-        }
+        return currencyMapper.map(currencyRepository.save(currencyFromExchangeApi));
 
-        return null;
     }
 
 }
