@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Slf4j
 @Service
@@ -28,8 +29,20 @@ public class GoldService {
     }
 
     public GoldDto getGoldPrice(String date) {
+
+        if(date == null) {
+            date = String.valueOf(LocalDate.now());
+        }
+
+        Date validDate;
+        try{
+            validDate = Date.valueOf(date);
+        }catch (IllegalArgumentException e) {
+            throw new DateFormatException("Invalid date format");
+        }
+
         Gold requestedGold = goldRepository
-                .findByDate(Date.valueOf(date));
+                .findByDate(validDate);
 
         if (requestedGold != null) {
             log.info("Gold price loaded from data base.");
