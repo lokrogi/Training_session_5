@@ -40,7 +40,7 @@ class RestApiControllerTest {
     }
 
     @Test
-    void should_return_ok_response_for_latest_with_with_invalid_currency_message() throws Exception {
+    void should_return_bad_request_for_latest_with_with_invalid_currency_message() throws Exception {
         mockMvc.perform(get("/api/latest?base=EURR&target=PLN")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -58,7 +58,7 @@ class RestApiControllerTest {
     }
 
     @Test
-    void should_return_ok_response_for_historical_with_invalid_currency_message() throws Exception {
+    void should_return_bad_request_for_historical_with_invalid_currency_message() throws Exception {
         mockMvc.perform(get("/api/historical?base=EURR&target=PLN&date=2019-03-14")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -67,7 +67,7 @@ class RestApiControllerTest {
     }
 
     @Test
-    void should_return_ok_response_for_historical_with_invalid_date_format_message() throws Exception {
+    void should_return_bad_request_for_historical_with_invalid_date_format_message() throws Exception {
         mockMvc.perform(get("/api/historical?base=EUR&target=PLN&date=20192-03-14")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
