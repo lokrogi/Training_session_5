@@ -50,7 +50,7 @@ public class RestApiController {
 
     @GetMapping("api/gold")
     public ResponseEntity<GoldDto> getGoldPrice(
-            @RequestParam(name = "date") String date) {
+            @RequestParam(name = "date", required = false) String date) {
 
         return ResponseEntity.ok(goldService.getGoldPrice(date));
     }
