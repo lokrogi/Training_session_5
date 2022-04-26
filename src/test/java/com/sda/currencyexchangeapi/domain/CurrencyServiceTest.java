@@ -24,7 +24,7 @@ class CurrencyServiceTest {
     @Mock
     private static CurrencyMapper currencyMapper;
     @Mock
-    private static ExchangeNbpApiConnection exchangeNbpApi;
+    private static NbpApiConnection nbpApi;
 
     @InjectMocks
     private CurrencyService currencyService;
@@ -50,7 +50,7 @@ class CurrencyServiceTest {
         CurrencyDto latestCurrencyRate = currencyService.getLatestCurrencyRate("notPln", "target", "2022-04-25");
 
         verify(exchangeRateApi).getCurrency("notPln", "target", "2022-04-25");
-        verifyNoInteractions(exchangeNbpApi);
+        verifyNoInteractions(nbpApi);
 
         assertEquals(latestCurrencyRate.getRate(), testCurrency.getRate());
     }
@@ -58,13 +58,13 @@ class CurrencyServiceTest {
     @Test
     public void should_return_rate_from_nbp_api() {
         Currency testCurrency = new Currency(0, "PLN", "target", 4.22, Date.valueOf("2022-04-25"));
-        when(exchangeNbpApi.getPlnCurrency("target", "2022-04-25")).thenReturn(testCurrency);
+        when(nbpApi.getPlnCurrency("target", "2022-04-25")).thenReturn(testCurrency);
         when(currencyRepository.save(testCurrency)).thenReturn(testCurrency);
         when(currencyMapper.map(testCurrency)).thenReturn(new CurrencyDto(testCurrency.getRate()));
 
         CurrencyDto latestCurrencyRate = currencyService.getLatestCurrencyRate("PLN", "target", "2022-04-25");
 
-        verify(exchangeNbpApi).getPlnCurrency("target", "2022-04-25");
+        verify(nbpApi).getPlnCurrency("target", "2022-04-25");
         verifyNoInteractions(exchangeRateApi);
 
         assertEquals(latestCurrencyRate.getRate(), testCurrency.getRate());

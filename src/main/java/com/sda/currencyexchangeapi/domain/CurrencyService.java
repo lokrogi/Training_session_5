@@ -6,8 +6,6 @@ import com.sda.currencyexchangeapi.model.CurrencyDto;
 
 import com.sda.currencyexchangeapi.repository.CurrencyRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,15 +19,15 @@ public class CurrencyService {
     private final CurrencyRepository currencyRepository;
     private final ExchangeRateApiConnection exchangeRateApi;
     private final CurrencyMapper currencyMapper;
-    private final ExchangeNbpApiConnection exchangeNbpApi;
+    private final NbpApiConnection nbpApi;
 
 
     @Autowired
-    public CurrencyService(CurrencyRepository currencyRepository, ExchangeRateApiConnection exchangeRateApi, CurrencyMapper currencyMapper, ExchangeNbpApiConnection exchangeNbpApi) {
+    public CurrencyService(CurrencyRepository currencyRepository, ExchangeRateApiConnection exchangeRateApi, CurrencyMapper currencyMapper, NbpApiConnection nbpApi) {
         this.currencyRepository = currencyRepository;
         this.exchangeRateApi = exchangeRateApi;
         this.currencyMapper = currencyMapper;
-        this.exchangeNbpApi = exchangeNbpApi;
+        this.nbpApi = nbpApi;
     }
 
 
@@ -52,7 +50,7 @@ public class CurrencyService {
         Currency currencyFromExchangeApi;
 
         if(base.equalsIgnoreCase("PLN") && !target.equals(base)){
-            currencyFromExchangeApi = exchangeNbpApi.getPlnCurrency(target, date);
+            currencyFromExchangeApi = nbpApi.getPlnCurrency(target, date);
             log.info("Currency loaded from NBP api.");
         }else {
             currencyFromExchangeApi = exchangeRateApi.getCurrency(base, target, date);
