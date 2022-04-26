@@ -16,11 +16,11 @@ import java.sql.Date;
 
 @Slf4j
 @Component
-public class ExchangeNbpApiConnection {
+public class NbpApiConnection {
 
     private static final String stringUrl = "http://api.nbp.pl/api/exchangerates/rates/c/";
 
-    public JSONObject getPlnCurrencyExchangeJson(String target, String date) throws URISyntaxException, IOException, InterruptedException {
+    private JSONObject getPlnCurrencyExchangeJson(String target, String date) throws URISyntaxException, IOException, InterruptedException {
 
         String strUrlWithParams = stringUrl + target + "/" + date + "/?format=json";
 
