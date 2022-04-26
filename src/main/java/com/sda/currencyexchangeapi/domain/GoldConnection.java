@@ -2,6 +2,7 @@ package com.sda.currencyexchangeapi.domain;
 
 import com.sda.currencyexchangeapi.model.Gold;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -45,8 +46,8 @@ public class GoldConnection {
                     .build();
 
             return gold;
-        } catch (URISyntaxException | InterruptedException | IOException e) {
-            return null;
+        } catch (JSONException | URISyntaxException | InterruptedException | IOException e) {
+            throw new DateFormatException("Given date is out of range");
         }
     }
 

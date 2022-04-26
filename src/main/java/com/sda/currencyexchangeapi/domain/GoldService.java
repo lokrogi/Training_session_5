@@ -51,12 +51,8 @@ public class GoldService {
 
         Gold goldFromApi = goldConnection.getGold(date);
 
-        if(goldFromApi != null) {
-            log.info("Gold price loaded from external api.");
-            return goldMapper.map(goldRepository.save(goldFromApi));
-        }
-
-        return null;
+        log.info("Gold price loaded from external api.");
+        return goldMapper.map(goldRepository.save(goldFromApi));
     }
 
 }
