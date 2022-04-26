@@ -75,5 +75,32 @@ class RestApiControllerTest {
                 .andExpect(jsonPath("$.message", equalTo("Invalid date format")));
     }
 
+    @Test
+    void should_return_bad_request_for_gold_with_invalid_date_format_message() throws Exception {
+        mockMvc.perform(get("/api/gold?date=2022-04-266")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", equalTo("Invalid date format")));
+    }
+
+    @Test
+    void should_return_ok_response_with_date_in_url() throws Exception {
+        mockMvc.perform(get("/api/gold?date=2022-04-21")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.price").exists());
+    }
+
+    @Test
+    void should_return_ok_response_without_date_in_url() throws Exception {
+        mockMvc.perform(get("/api/gold")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.price").exists());
+    }
+
 
 }
